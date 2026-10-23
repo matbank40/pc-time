@@ -37,7 +37,7 @@ jobs:
       - name: SHA-256
         shell: pwsh
         run: |
-          Get-ChildItem dist -Filter *.exe | ForEach-Object {
+          Get-ChildItem dist -Filter PCTime-Setup-*.exe | ForEach-Object {
             "$((Get-FileHash $_.FullName -Algorithm SHA256).Hash)  $($_.Name)"
           } | Out-File dist/SHA256.txt -Encoding ascii
           Get-Content dist/SHA256.txt
@@ -46,7 +46,7 @@ jobs:
         with:
           name: PCTime
           path: |
-            dist/*.exe
+            dist/PCTime-Setup-*.exe
             dist/SHA256.txt
 
       - name: Release
@@ -54,5 +54,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            dist/*.exe
+            dist/PCTime-Setup-*.exe
             dist/SHA256.txt

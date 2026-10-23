@@ -290,6 +290,8 @@ FRIENDLY = {
     "cmd.exe": "Командная строка",
     "powershell.exe": "PowerShell",
     "taskmgr.exe": "Диспетчер задач",
+    "screenclippinghost.exe": "Ножницы",
+    "snippingtool.exe": "Ножницы",
     "pctime.exe": "PC Time",
     "pythonw.exe": "Python",
     "python.exe": "Python",

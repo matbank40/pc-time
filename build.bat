@@ -1,7 +1,13 @@
 @echo off
 chcp 65001 >nul
 cd /d "%~dp0"
-echo === PC Time: step 1/2 - building PCTime.exe ===
+
+set "ISCC=%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
+if not exist "%ISCC%" set "ISCC=%ProgramFiles%\Inno Setup 6\ISCC.exe"
+if not exist "%ISCC%" set "ISCC=%LocalAppData%\Programs\Inno Setup 6\ISCC.exe"
+if not exist "%ISCC%" goto :noinno
+
+echo === PC Time: step 1/2 - building program ===
 python -m pip install --upgrade -r requirements.txt pyinstaller || goto :error
 python -m PyInstaller --noconfirm --clean --noconsole --onefile ^
   --name PCTime ^
@@ -11,28 +17,21 @@ python -m PyInstaller --noconfirm --clean --noconsole --onefile ^
 
 echo.
 echo === PC Time: step 2/2 - building installer ===
-set "ISCC=%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
-if not exist "%ISCC%" set "ISCC=%ProgramFiles%\Inno Setup 6\ISCC.exe"
-if not exist "%ISCC%" set "ISCC=%LocalAppData%\Programs\Inno Setup 6\ISCC.exe"
-if not exist "%ISCC%" goto :noinno
 "%ISCC%" installer.iss || goto :error
+del /q dist\PCTime.exe 2>nul
 echo.
-echo Done: dist\PCTime-Setup-1.1.0.exe  [installer]
-echo       dist\PCTime.exe                [portable]
+echo Done: dist\PCTime-Setup-1.1.0.exe
 explorer dist
 pause
 exit /b 0
 
 :noinno
-echo Inno Setup 6 not found, installer skipped.
+echo Inno Setup 6 is required to build the installer.
 echo Install it: winget install JRSoftware.InnoSetup
 echo   or download: https://jrsoftware.org/isdl.php
 echo Then run build.bat again.
-echo.
-echo Portable exe is ready: dist\PCTime.exe
-explorer dist
 pause
-exit /b 0
+exit /b 1
 
 :error
 echo.
